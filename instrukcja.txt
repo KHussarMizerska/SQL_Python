@@ -1,3 +1,10 @@
-Tutaj opiszê, jak dzia³a aplikacja "krewni i znajomi"
+Aplikacja powsta³a w okresie wrzesieñ-listopad 2018.
 
-Aplikacja powsta³a w okresie wrzesieñ-listopad 2018
+Baza danych zawiera krewnych i znajomych (doros³ych i dzieci) oraz ich daty urodzenia i daty œlubu. 
+
+Do aplikacji mo¿na zalogowaæ siê jako user albo admin.
+
+User mo¿e wyœwietliæ swoje dane oraz ró¿ne statystyki, u¿ywaj¹c prostego menu wyboru.
+
+Admin, u¿ywaj¹c prostego menu wyboru, mo¿e wyœwietliæ ró¿ne statystyki, a tak¿e zarz¹dzaæ baz¹ danych (dodawaæ, usuwaæ osoby i modyfikowaæ ich dane).
+
