@@ -1,1 +1,3 @@
 Tutaj opiszê, jak dzia³a aplikacja "krewni i znajomi"
+
+Aplikacja powsta³a w okresie wrzesieñ-listopad 2018
