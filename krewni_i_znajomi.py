@@ -393,8 +393,11 @@ class DBConnect:
 
     def dni_tyg_ur_dz(self):
 
-        _SQL = "SELECT DAYNAME(data_ur) AS dzien_tyg_ur, COUNT(*) AS ile, DAYOFWEEK(data_ur) FROM dzieci GROUP BY DAYNAME(data_ur) ORDER BY DAYOFWEEK(data_ur)"
+        _SQL_lan = "SET @@lc_time_names = 'pl_PL'"
+        _SQL = """ SELECT DAYNAME(data_ur) AS dzien_tyg_ur, COUNT(*) AS ile, DAYOFWEEK(data_ur) FROM dzieci 
+            GROUP BY DAYNAME(data_ur) ORDER BY DAYOFWEEK(data_ur)"""
 
+        self.cursor.execute(_SQL_lan)
         self.cursor.execute(_SQL)
         allResults = self.cursor.fetchall()
         print(x)
@@ -402,7 +405,7 @@ class DBConnect:
 
         i = 1
         for row in allResults:
-            print("%-10s %2s" % (row[0], row[1]))
+            print("%-15s %2s" % (row[0], row[1]))
             i += 1
         print(x)
 
@@ -551,8 +554,11 @@ class DBConnect:
 
     def dni_tyg_ur_d(self):
 
+        _SQL_lan = "SET @@lc_time_names = 'pl_PL'"
+
         _SQL = "SELECT DAYNAME(data_ur) AS dzien_tyg_ur, COUNT(*) AS ile, DAYOFWEEK(data_ur) FROM dorosli GROUP BY DAYNAME(data_ur) ORDER BY DAYOFWEEK(data_ur)"
 
+        self.cursor.execute(_SQL_lan)
         self.cursor.execute(_SQL)
         allResults = self.cursor.fetchall()
         print(x)
@@ -636,7 +642,13 @@ class DBConnect:
 
     def dni_tyg_slubu(self):
 
-        _SQL = "SELECT DAYNAME(data_slubu) AS dzien_tyg_slubu, count(data_slubu) as ile FROM malzenstwa GROUP BY DAYNAME(data_slubu) ORDER BY dzien_tyg_slubu ASC"
+        _SQL_lan = "SET @@lc_time_names = 'pl_PL'"
+        _SQL = """SELECT DAYOFWEEK(data_slubu), DAYNAME(data_slubu) AS dzien_tyg_slubu, count(data_slubu) as ile 
+                FROM malzenstwa 
+                GROUP BY DAYNAME(data_slubu) 
+                ORDER BY DAYOFWEEK(data_slubu)"""
+
+        self.cursor.execute(_SQL_lan)
         self.cursor.execute(_SQL)
         allResults = self.cursor.fetchall()
         print(x)
@@ -644,7 +656,7 @@ class DBConnect:
 
         i = 1
         for row in allResults:
-            print("%-10s %2s" % (row[0], row[1]))
+            print("%-15s %2s" % (row[1], row[2]))
             i += 1
         print(x)
 
