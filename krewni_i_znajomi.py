@@ -16,7 +16,7 @@ class DBConnect:
 
     def __init__(self):
         try:
-            self.conn = pymysql.connect("localhost", "root", "Kassar1!", "krewni_i_znajomi")
+            self.conn = pymysql.connect("localhost", "root", "Kassar1!", "krewni_i_znajomi_test")
             print("Połączenie z bazą danych ustanowione!")
             self.logowanie()
             self.conn.close()
