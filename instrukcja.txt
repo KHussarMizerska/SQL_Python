@@ -1,4 +1,4 @@
-Aplikacja powsta³a w okresie wrzesieñ-listopad 2018.
+Aplikacja powsta³a w okresie wrzesieñ-listopad 2018. Autor: Katarzyna Hussar-Mizerska
 
 Baza danych zawiera krewnych i znajomych (doros³ych i dzieci) oraz ich daty urodzenia i daty œlubu. 
 
