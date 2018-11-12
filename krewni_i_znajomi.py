@@ -154,11 +154,11 @@ class DBConnect:
     def statystyki_dz(self):
 
         menu = """\nJakie statystyki dzieci Cię interesują?
-                            1 - Statystyki imion dzieci
-                            2 - Statystyki misięcy urodzenia dzieci
-                            3 - Statystyki lat urodzenia dzieci
-                            4 - Statystyki dni tygodnia urodzenia dzieci
-                            5 - Statystyki znaków zodiaku dzieci
+                            1 - Imiona dzieci
+                            2 - Miesiące urodzenia dzieci
+                            3 - Lata urodzenia dzieci
+                            4 - Dni tygodnia urodzenia dzieci
+                            5 - Znaki zodiaku dzieci
                             p - Powrót do menu głównego
                             w - Wyjście z programu"""
 
@@ -190,13 +190,13 @@ class DBConnect:
     def statystyki_d(self):
 
         menu = """\nJakie statystyki dorosłych Cię interesują?
-                            1 - Statystyki imion dorosłych
-                            2 - Statystyki misięcy urodzenia dorosłych
-                            3 - Statystyki lat urodzenia dorosłych
-                            4 - Statystyki dni tygodnia urodzenia dorosłych
-                            5 - Statystyki znaków zodiaku dorosłych
-                            6 - Statystyki miesięcy ślubu
-                            7 - Statystyki dni tygodnia ślubu
+                            1 - Imiona dorosłych
+                            2 - Miesiące urodzenia dorosłych
+                            3 - Lata urodzenia dorosłych
+                            4 - Dni tygodnia urodzenia dorosłych
+                            5 - Znaki zodiaku dorosłych
+                            6 - Miesiące ślubu
+                            7 - Dni tygodnia ślubu
                             p - Powrót do menu głównego
                             w - Wyjście z programu"""
 
@@ -234,13 +234,11 @@ class DBConnect:
     def statystyki_w(self):
 
         menu = """\nJakie statystyki łączne Cię interesują?
-                            1 - Statystyki imion 
-                            2 - Statystyki misięcy urodzenia
-                            3 - Statystyki dni miesiąca urodzenia
-                            4 - Statystyki dni tygodnia urodzenia 
-                            5 - Statystyki znaków zodiaku 
-                            6 - Statystyki rocznic ślubu w tym roku
-                            7 - 
+                            1 - Imiona 
+                            2 - Miesiące urodzenia
+                            3 - Dni miesiąca urodzenia
+                            4 - Dni tygodnia urodzenia 
+                            5 - Znaki zodiaku 
                             p - Powrót do menu głównego
                             w - Wyjście z programu"""
 
@@ -261,12 +259,6 @@ class DBConnect:
             elif (dec == "5"):
                 self.znaki_zodiaku_w()
                 self.statystyki_w()
-            elif (dec == "6"):
-                self.rocznice_slubu_rok()
-                self.statystyki_d()
-            elif (dec == "7"):
-                self.dni_tyg_slubu()
-                self.statystyki_d()
             elif (dec == "p"):
                 self.menu_user()
             elif (dec == "w"):
@@ -280,7 +272,6 @@ class DBConnect:
         menu = """\nJakie zmiany w bazie dancyh chcesz wprowadzić?
                             1 - Dodaj osoby
                             2 - Usuń osoby
-                            3 - Zmień dane
                             p - Powrót do menu głównego
                             w - Wyjście z programu"""
 
@@ -290,7 +281,7 @@ class DBConnect:
                 self.dodaj_osoby()
                 self.zarzadzanie()
             elif (dec == "2"):
-                self.mies_ur_dz()
+                self.usun_osoby()
                 self.zarzadzanie()
             elif (dec == "3"):
                 self.lata_ur_dz()
@@ -315,10 +306,10 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.dodaj_dz()
-                self.dodaj_osoby()
+                self.zarzadzanie()
             elif (dec == "2"):
                 self.dodaj_d()
-                self.dodaj_osoby()
+                self.zarzadzanie()
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
@@ -326,6 +317,31 @@ class DBConnect:
                 break
             else:
                 print("Niepoprawny wybór!")
+
+    def usun_osoby(self):
+
+        menu = """\nKogo chcesz usunąć z bazy?
+                             1 - Usuń dziecko
+                             2 - Usuń dorosłego
+                             p - Powrót do menu głównego
+                             w - Wyjście z programu"""
+
+        while (True):
+            dec = input(menu)
+            if (dec == "1"):
+                self.usun_dz()
+                self.zarzadzanie()
+            elif (dec == "2"):
+                self.usun_d()
+                self.zarzadzanie()
+            elif (dec == "p"):
+                self.menu_admin()
+            elif (dec == "w"):
+                print("Koniec programu, podobało się?")
+                break
+            else:
+                print("Niepoprawny wybór!")
+
 
     # DZIECI
 
@@ -433,9 +449,36 @@ class DBConnect:
 
         self.cursor.execute("INSERT INTO dzieci (imie, nazwisko, data_ur, plec) VALUES (%s,%s,%s,%s)",
                             (imie, nazwisko, data_ur, plec))
-        self.conn.commit()
-        print("Dodano do bazy!")
 
+        dec = input("Czy na pewno dodać dziecko " + imie + " " + nazwisko + " " + data_ur + " " + plec + "?" + " T/N")
+        if dec == "T":
+            self.conn.commit()
+            print("Dodano do bazy!")
+            self.zarzadzanie()
+        else:
+            self.conn.rollback()
+
+    def usun_dz(self):
+
+        imie = input("Podaj imię dziecka do usunięcia: ")
+        nazwisko = input("Podaj nazwisko dziecka do usunięcia: ")
+        _SQL1 = "SELECT * FROM dzieci WHERE imie = %s AND nazwisko = %s"
+        self.cursor.execute(_SQL1, (imie, nazwisko))
+        allResults = self.cursor.fetchall()
+        print("Znaleziono następujące dzieci w bazie:")
+        i = 1
+        for row in allResults:
+            print(row[1], row[2], row[3], row[4])
+            i += 1
+        dec = input("Czy na pewno usunąć dziecko " + imie + " " + nazwisko + "?" + " T/N")
+        _SQL = "DELETE FROM dzieci WHERE imie = %s AND nazwisko = %s"
+        self.cursor.execute(_SQL, (imie, nazwisko))
+        if dec == "T":
+            self.conn.commit()
+            print("Dziecko " + imie + " " + nazwisko + " usunięte z bazy!")
+            self.zarzadzanie()
+        else:
+            self.conn.rollback()
 
     # DOROŚLI
 
@@ -669,8 +712,35 @@ class DBConnect:
 
         self.cursor.execute("INSERT INTO dorosli (imie, nazwisko, data_ur, plec) VALUES (%s,%s,%s,%s)",
                             (imie, nazwisko, data_ur, plec))
-        self.conn.commit()
-        print("Dodano do bazy!")
+        dec = input("Czy na pewno dodać dorosłego " + imie + " " + nazwisko + " " + data_ur + " " + plec + "?" + " T/N")
+        if dec == "T":
+            self.conn.commit()
+            print("Dodano do bazy!")
+            self.zarzadzanie()
+        else:
+            self.conn.rollback()
+
+    def usun_d(self):
+
+        imie = input("Podaj imię dorosłego do usunięcia: ")
+        nazwisko = input("Podaj nazwisko dorosłego do usunięcia: ")
+        _SQL1 = "SELECT * FROM dorosli WHERE imie = %s AND nazwisko = %s"
+        self.cursor.execute(_SQL1, (imie, nazwisko))
+        allResults = self.cursor.fetchall()
+        print("Znaleziono następujące osoby w bazie:")
+        i = 1
+        for row in allResults:
+            print(row[1], row[2], row[3], row[4])
+            i += 1
+        dec = input("Czy na pewno usunąć dorosłego " + imie + " " + nazwisko + "?" + " T/N")
+        _SQL = "DELETE FROM dorosli WHERE imie = %s AND nazwisko = %s"
+        self.cursor.execute(_SQL, (imie, nazwisko))
+        if dec == "T":
+            self.conn.commit()
+            print("Dorosły " + imie + " " + nazwisko + " usunięty z bazy!")
+            self.zarzadzanie()
+        else:
+            self.conn.rollback()
 
     # WSZYSCY
 
