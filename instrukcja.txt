@@ -4,7 +4,7 @@ Baza danych zawiera krewnych i znajomych (doros³ych i dzieci) oraz ich daty urod
 
 Do aplikacji mo¿na zalogowaæ siê jako user albo admin.
 
-User mo¿e wyœwietliæ swoje dane oraz ró¿ne statystyki, u¿ywaj¹c prostego menu wyboru.
+User mo¿e wyœwietliæ swoje dane oraz ró¿ne statystyki, u¿ywaj¹c prostego menu wyboru. W przygotowaniu sekcja pokazuj¹ca dane demograficzne.
 
-Admin, u¿ywaj¹c prostego menu wyboru, mo¿e wyœwietliæ ró¿ne statystyki, a tak¿e zarz¹dzaæ baz¹ danych (dodawaæ, usuwaæ osoby i modyfikowaæ ich dane).
+Admin, u¿ywaj¹c prostego menu wyboru, mo¿e wyœwietliæ ró¿ne statystyki, a tak¿e zarz¹dzaæ baz¹ danych (dodawaæ i usuwaæ osoby).
 
