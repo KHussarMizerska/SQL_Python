@@ -5,7 +5,6 @@ x = (10*"**********")
 now = datetime.datetime.now()
 rok = now.year
 
-
 class DBConnect:
 
     now = datetime.datetime.now()
@@ -60,6 +59,8 @@ class DBConnect:
             6 - Wyświetl statystyki dni tygodnia urodzenia
             7 - Wyświetl statystyki znaków zodiaku
             8 - Wyświetl statystyki rocznic ślubu w tym roku
+            9 - Jubileusze w tym miesiącu
+            d - Demografia
             z - Zarządzanie bazą
             w - Wyjście z programu"""
 
@@ -69,28 +70,24 @@ class DBConnect:
                 self.urodziny_dzis()
                 self.okragle_dni_dzis()
                 self.rocznice_slubu()
-                self.menu_admin()
             elif (dec == "2"):
                 self.wszyscy()
-                self.menu_admin()
             elif (dec == "3"):
                 self.imiona_dz()
-                self.menu_admin()
             elif (dec == "4"):
                 self.imiona_d()
-                self.menu_admin()
             elif(dec == "5"):
                 self.mies_ur_w()
-                self.menu_admin()
             elif (dec == "6"):
                 self.dni_tyg_ur_w()
-                self.menu_admin()
             elif (dec == "8"):
                 self.rocznice_slubu_rok()
-                self.menu_admin()
+            elif (dec == "9"):
+                self.jubileusze_ten_miesiac()
+            elif (dec == "d"):
+                self.demografia()
             elif (dec == "z"):
                 self.zarzadzanie()
-                self.menu_admin()
             elif (dec == "w"):
                 print("Koniec programu, podobało się?")
                 break
@@ -108,15 +105,12 @@ class DBConnect:
 
             if (dec == "1"):
                 self.moje_dane()
-                self.menu_user()
             elif (dec == "2"):
                 self.statystyki()
-                self.menu_user()
             elif (dec == "3"):
                 print(x)
                 print("Ta sekcja jest jeszcze pusta!")
                 print(x)
-                self.menu_user()
             elif (dec == "w"):
                 print("Koniec programu, podobało się?")
                 break
@@ -136,13 +130,10 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.statystyki_dz()
-                self.menu_user()
             elif (dec == "2"):
                 self.statystyki_d()
-                self.menu_user()
             elif (dec == "3"):
                 self.statystyki_w()
-                self.menu_user()
             elif (dec == "p"):
                 self.menu_user()
             elif (dec == "w"):
@@ -166,19 +157,14 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.imiona_dz()
-                self.statystyki_dz()
             elif (dec == "2"):
                 self.mies_ur_dz()
-                self.statystyki_dz()
             elif (dec == "3"):
                 self.lata_ur_dz()
-                self.statystyki_dz()
             elif (dec == "4"):
                 self.dni_tyg_ur_dz()
-                self.statystyki_dz()
             elif (dec == "5"):
                 self.znaki_zodiaku_dz()
-                self.statystyki_dz()
             elif (dec == "p"):
                 self.menu_user()
             elif (dec == "w"):
@@ -204,25 +190,18 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.imiona_d()
-                self.statystyki_d()
             elif (dec == "2"):
                 self.mies_ur_d()
-                self.statystyki_d()
             elif (dec == "3"):
                 self.lata_ur_d()
-                self.statystyki_d()
             elif (dec == "4"):
                 self.dni_tyg_ur_d()
-                self.statystyki_d()
             elif (dec == "5"):
                 self.znaki_zodiaku_d()
-                self.statystyki_d()
             elif (dec == "6"):
                 self.mies_slubu()
-                self.statystyki_d()
             elif (dec == "7"):
                 self.dni_tyg_slubu()
-                self.statystyki_d()
             elif (dec == "p"):
                 self.menu_user()
             elif (dec == "w"):
@@ -246,19 +225,14 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.imiona_w()
-                self.statystyki_w()
             elif (dec == "2"):
                 self.mies_ur_w()
-                self.statystyki_w()
             elif (dec == "3"):
                 self.dni_mies_ur_w()
-                self.statystyki_w()
             elif (dec == "4"):
                 self.dni_tyg_ur_w()
-                self.statystyki_w()
             elif (dec == "5"):
                 self.znaki_zodiaku_w()
-                self.statystyki_w()
             elif (dec == "p"):
                 self.menu_user()
             elif (dec == "w"):
@@ -267,9 +241,50 @@ class DBConnect:
             else:
                 print("Niepoprawny wybór!")
 
+    def demografia(self):
+
+        menu = """\nWybierz, jakie dane demograficzne chcesz zobaczyć: 
+            1 - Wiek
+            2 - Wiek w dniu ślubu 
+            3 - Wiek w dniu urodzenia pierwszego dziecka 
+            4 - Liczba dzieci
+            5 - Płeć dzieci
+            6 - 
+            7 - 
+            8 - 
+            9 - 
+            p - Powrót do menu głównego
+            w - Wyjście z programu"""
+
+        while (True):
+            dec = input(menu)
+            if (dec == "1"):
+                self.wiek_dz()
+            elif (dec == "2"):
+                self.wszyscy()
+            elif (dec == "3"):
+                self.imiona_dz()
+            elif (dec == "4"):
+                self.imiona_d()
+            elif(dec == "5"):
+                self.mies_ur_w()
+            elif (dec == "6"):
+                self.dni_tyg_ur_w()
+            elif (dec == "8"):
+                self.rocznice_slubu_rok()
+            elif (dec == "9"):
+                self.jubileusze_ten_miesiac()
+            elif (dec == "p"):
+                self.menu_admin()
+            elif (dec == "w"):
+                print("Koniec programu, podobało się?")
+                break
+            else:
+                print("Niepoprawne dane wejściowe")
+
     def zarzadzanie(self):
 
-        menu = """\nJakie zmiany w bazie dancyh chcesz wprowadzić?
+        menu = """\nJakie zmiany w bazie danych chcesz wprowadzić?
                             1 - Dodaj osoby
                             2 - Usuń osoby
                             p - Powrót do menu głównego
@@ -279,13 +294,10 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.dodaj_osoby()
-                self.zarzadzanie()
             elif (dec == "2"):
                 self.usun_osoby()
-                self.zarzadzanie()
             elif (dec == "3"):
                 self.lata_ur_dz()
-                self.zarzadzanie()
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
@@ -306,10 +318,8 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.dodaj_dz()
-                self.zarzadzanie()
             elif (dec == "2"):
                 self.dodaj_d()
-                self.zarzadzanie()
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
@@ -330,10 +340,8 @@ class DBConnect:
             dec = input(menu)
             if (dec == "1"):
                 self.usun_dz()
-                self.zarzadzanie()
             elif (dec == "2"):
                 self.usun_d()
-                self.zarzadzanie()
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
@@ -341,7 +349,6 @@ class DBConnect:
                 break
             else:
                 print("Niepoprawny wybór!")
-
 
     # DZIECI
 
@@ -480,6 +487,32 @@ class DBConnect:
         else:
             self.conn.rollback()
 
+    def wiek_dz(self):
+
+        _SQL = """SELECT imie, nazwisko, data_ur, 
+            TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) AS lata,
+            TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 AS miesiace,
+            TIMESTAMPDIFF(DAY, (data_ur + INTERVAL TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) YEAR + INTERVAL TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 MONTH), CURDATE()) AS dni
+            FROM dzieci
+            ORDER BY lata DESC, miesiace DESC, dni DESC;"""
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+        print(x)
+        print("Dokładny wiek dzieci krewnych i znajomych Kasi: ")
+        print(
+            "----------------------------------------------------------------------------------------------------------")
+        print("%-15s %-20s %-15s %8s %10s %8s" % (
+        "Imię", "Nazwisko", "Data urodzenia", "Lata", "Miesiące", "Dni"))
+        print(
+            "----------------------------------------------------------------------------------------------------------")
+
+        i = 1
+        for row in allResults:
+            print("%-15s %-20s %-15s %8s %10s %8s" % (row[0], row[1], row[2], row[3], row[4], row[5]))
+            i += 1
+        print(x)
+
     # DOROŚLI
 
     def moje_dane(self):
@@ -494,19 +527,25 @@ class DBConnect:
         print("Twoje dane w bazie danych Kasi:")
         i = 1
         for row in allResults:
-            print(row[1], row[2], row[3], row[4])
+            print(row[1], row[2])
+            print("Data urodzenia: " + str(row[3]))
+            print("Płeć: " + str(row[4]))
             i += 1
 
-        #Dzieci
+        # Dzieci
 
         self.cursor.execute("SELECT * FROM rodzice_i_ich_dzieci WHERE imie_rodzica=%s AND nazwisko_rodzica=%s",
                             (self.log_imie, self.log_nazwisko))
         allKids = self.cursor.fetchall()
-        print("\nTwoje dzieci:")
-        i = 1
-        for item in allKids:
-            print(item[2], item[3])
-            i += 1
+
+        if len(allKids) == 0:
+            print("W bazie danych Kasi nie masz dzieci.")
+        else:
+            print("\nTwoje dzieci:")
+            i = 1
+            for item in allKids:
+                print(item[2], item[3])
+                i += 1
 
         # Druga Połowa
 
@@ -515,16 +554,22 @@ class DBConnect:
                             (self.log_imie, self.log_nazwisko))
 
             result = self.cursor.fetchone()
-            print("\nTwoja Druga Połowa: ")
-            print(result[0], result[1])
+            if result == None:
+                print("W bazie danych Kasi nie masz partnera.")
+            else:
+                print("\nTwoja Druga Połowa: ")
+                print(result[0], result[1])
 
         else:
             self.cursor.execute("SELECT imie_zony, nazwisko_zony FROM malzenstwa_imiennie WHERE imie_meza=%s AND nazwisko_meza=%s",
                 (self.log_imie, self.log_nazwisko))
 
             result = self.cursor.fetchone()
-            print("\nTwoja Druga Połowa: ")
-            print(result[0], result[1])
+            if result == None:
+                print("W bazie danych Kasi nie masz partnera.")
+            else:
+                print("\nTwoja Druga Połowa: ")
+                print(result[0], result[1])
 
         # Wiek w dniach
 
@@ -532,6 +577,16 @@ class DBConnect:
         self.cursor.execute(_SQL, (self.log_imie, self.log_nazwisko))
         wiek_w_dniach = self.cursor.fetchone()
         print("\nDziś kończysz " + str(wiek_w_dniach[0]) + " dni :)")
+
+        # Dokładny wiek
+
+        self.cursor.execute("SELECT * FROM dokladny_wiek_d WHERE imie=%s AND nazwisko=%s",
+                            (self.log_imie, self.log_nazwisko))
+        dokladny_wiek = self.cursor.fetchone()
+        print("\nTwój dokładny wiek dziś to: ")
+        print("Lata: "+ str(dokladny_wiek[3]))
+        print("Miesiące: " + str(dokladny_wiek[4]))
+        print("Dni: " + str(dokladny_wiek[5]))
         print(x)
 
     def imiona_d(self):
@@ -789,6 +844,39 @@ class DBConnect:
             i += 1
         print(x)
 
+    def jubileusze_ten_miesiac(self):
+
+        _SQL = """SELECT imie, nazwisko, data_ur 
+            FROM wszyscy 
+            WHERE MONTH(data_ur) = MONTH(CURDATE())
+            ORDER BY DAY(data_ur), YEAR(data_ur)"""
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+
+        print(x)
+        print("W tym miesiącu urodziny obchodzą:")
+        i = 1
+        for row in allResults:
+            print("%-10s %-20s %-10s" % (row[0], row[1], row[2]))
+            i += 1
+        print(x)
+
+        _SQL = """SELECT * 
+                    FROM malzenstwa_imiennie 
+                    WHERE MONTH(data_slubu) = MONTH(CURDATE())
+                    ORDER BY DAY(data_slubu), YEAR(data_slubu)"""
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+
+        print("W tym miesiącu rocznicę ślubu obchodzą:")
+        i = 1
+        for row in allResults:
+            print("%-10s %-20s %-10s %-20s %-20s" % (row[0], row[1], row[3], row[4], row[2]))
+            i += 1
+        print(x)
+
     def okragle_dni_dzis(self):
 
         _SQL = """SELECT imie, nazwisko, data_ur, DATEDIFF(NOW(), data_ur) AS wiek_w_dniach 
@@ -945,7 +1033,5 @@ class DBConnect:
             print("%-10s %2s" % (row[0], row[1]))
             i += 1
         print(x)
-
-
 
 db = DBConnect()
