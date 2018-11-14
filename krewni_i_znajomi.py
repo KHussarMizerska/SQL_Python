@@ -1,3 +1,4 @@
+import math
 import pymysql
 import datetime
 
@@ -244,24 +245,29 @@ class DBConnect:
     def demografia(self):
 
         menu = """\nWybierz, jakie dane demograficzne chcesz zobaczyć: 
-            1 - Wiek
-            2 - Wiek w dniu ślubu 
-            3 - Wiek w dniu urodzenia pierwszego dziecka 
-            4 - Liczba dzieci
-            5 - Płeć dzieci
-            6 - 
-            7 - 
-            8 - 
-            9 - 
+            1 - Wiek dzieci
+            2 - Wiek dorosłych
+            3 - Wiek w dniu ślubu 
+            4 - Wiek w dniu urodzenia pierwszego dziecka 
+            5 - Liczba dzieci
+            6 - Płeć dzieci
             p - Powrót do menu głównego
             w - Wyjście z programu"""
 
         while (True):
             dec = input(menu)
             if (dec == "1"):
+                self.wiek_sredni_dz()
+                self.wiek_sredni_dziewczynki_dz()
+                self.wiek_sredni_chlopcy_dz()
+                self.wiek_mediana_dz()
                 self.wiek_dz()
             elif (dec == "2"):
-                self.wszyscy()
+                self.wiek_sredni_d()
+                self.wiek_sredni_kobiety_d()
+                self.wiek_sredni_mezczyzni_d()
+                self.wiek_mediana_d()
+                self.wiek_d()
             elif (dec == "3"):
                 self.imiona_dz()
             elif (dec == "4"):
@@ -502,15 +508,129 @@ class DBConnect:
         print("Dokładny wiek dzieci krewnych i znajomych Kasi: ")
         print(
             "----------------------------------------------------------------------------------------------------------")
-        print("%-15s %-20s %-15s %8s %10s %8s" % (
-        "Imię", "Nazwisko", "Data urodzenia", "Lata", "Miesiące", "Dni"))
+        print("%-4s %-15s %-20s %-15s %8s %10s %8s" % (
+        "Lp.", "Imię", "Nazwisko", "Data urodzenia", "Lata", "Miesiące", "Dni"))
         print(
             "----------------------------------------------------------------------------------------------------------")
 
         i = 1
         for row in allResults:
-            print("%-15s %-20s %-15s %8s %10s %8s" % (row[0], row[1], row[2], row[3], row[4], row[5]))
+            print("%-4s %-15s %-20s %-15s %8s %10s %8s" % (i, row[0], row[1], row[2], row[3], row[4], row[5]))
             i += 1
+        print(x)
+
+    def wiek_sredni_dz(self):
+
+        _SQL = "SELECT ROUND(AVG(timestampdiff(year, data_ur, NOW())),2) AS sredni_wiek_dz FROM dzieci"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        print(x)
+        print("Średni wiek dzieci: " + str(avg[0]) + " lata")
+        print(x)
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dzieci"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0]/365)
+        mies = math.floor((avg[0]%365)/30)
+        dni = (avg[0]%365)%30
+        print("Średni wiek dzieci: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+    def wiek_mediana_dz(self):
+
+        _SQL = "SELECT *, (DATEDIFF(NOW(), data_ur)) AS wiek_w_dniach FROM dzieci"
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+
+        max = 0
+        i = 1
+        for row in allResults:
+            if row[5] > max:
+                max = row[5]
+            else:
+                continue
+            i += 1
+        lata = math.floor(max / 365)
+        mies = math.floor((max % 365) / 30)
+        dni = (max % 365) % 30
+
+        print("Najstarsze dziecko ma: " + str(max) + " dni, czyli około " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+        min = 100000
+        i = 1
+        for row in allResults:
+            if row[5] < min:
+                min = row[5]
+            else:
+                continue
+            i += 1
+        lata = math.floor(min / 365)
+        mies = math.floor((min % 365) / 30)
+        dni = (min % 365) % 30
+
+        print("Najmłodsze dziecko ma: " + str(min) + " dni, czyli około " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+        self.cursor.execute("SELECT count(*) FROM dzieci")
+        liczba_d = self.cursor.fetchone()
+
+        id_mediany = (liczba_d[0] + 1) / 2
+
+        if math.floor(id_mediany) == id_mediany:
+            _SQL = """SELECT imie, nazwisko, data_ur, 
+                                        TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) AS lata,
+                                        TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 AS miesiace,
+                                        TIMESTAMPDIFF(DAY, (data_ur + INTERVAL TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) YEAR + INTERVAL TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 MONTH), CURDATE()) AS dni
+                                        FROM dzieci
+                                        ORDER BY lata DESC, miesiace DESC, dni DESC;"""
+
+            self.cursor.execute(_SQL)
+            allResults = self.cursor.fetchall()
+            i = 1
+            for row in allResults:
+                if i == id_mediany:
+                    print("Mediana wieku dzieci to: " + str(row[3]) + " lat, " + str(row[4]) + " miesięcy i " + str(
+                        row[5]) + " dni.")
+                i += 1
+            print(x)
+        else:
+            print("Mediana wieku dzieci to ułamek.")
+            print(x)
+
+        print(liczba_d[0])
+        print(id_mediany)
+
+    def wiek_sredni_dziewczynki_dz(self):
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dzieci WHERE plec = 'K'"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0] / 365)
+        mies = math.floor((avg[0] % 365) / 30)
+        dni = (avg[0] % 365) % 30
+        print("Średni wiek dziewczynek: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+    def wiek_sredni_chlopcy_dz(self):
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dzieci WHERE plec = 'M'"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0] / 365)
+        mies = math.floor((avg[0] % 365) / 30)
+        dni = (avg[0] % 365) % 30
+        print("Średni wiek chłopcow: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
         print(x)
 
     # DOROŚLI
@@ -796,6 +916,143 @@ class DBConnect:
             self.zarzadzanie()
         else:
             self.conn.rollback()
+
+    def wiek_d(self):
+
+        _SQL = """SELECT imie, nazwisko, data_ur, 
+            TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) AS lata,
+            TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 AS miesiace,
+            TIMESTAMPDIFF(DAY, (data_ur + INTERVAL TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) YEAR + INTERVAL TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 MONTH), CURDATE()) AS dni
+            FROM dorosli
+            ORDER BY lata DESC, miesiace DESC, dni DESC;"""
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+        print("Dokładny wiek krewnych i znajomych Kasi: ")
+        print(
+            "----------------------------------------------------------------------------------------------------------")
+        print("%-4s %-15s %-20s %-15s %8s %10s %8s" % (
+        "Lp.", "Imię", "Nazwisko", "Data urodzenia", "Lata", "Miesiące", "Dni"))
+        print(
+            "----------------------------------------------------------------------------------------------------------")
+
+        i = 1
+        for row in allResults:
+            print("%-4s %-15s %-20s %-15s %8s %10s %8s" % (i, row[0], row[1], row[2], row[3], row[4], row[5]))
+            i += 1
+        print(x)
+
+    def wiek_sredni_d(self):
+
+        _SQL = "SELECT ROUND(AVG(timestampdiff(year, data_ur, NOW())),2) AS sredni_wiek_dz FROM dorosli"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        print("Średni wiek krewnych i znajomych Kasi: " + str(avg[0]) + " lata")
+        print(x)
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dorosli"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0]/365)
+        mies = math.floor((avg[0]%365)/30)
+        dni = (avg[0]%365)%30
+        print("Średni wiek: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+    def wiek_sredni_kobiety_d(self):
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dorosli WHERE plec = 'K'"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0] / 365)
+        mies = math.floor((avg[0] % 365) / 30)
+        dni = (avg[0] % 365) % 30
+        print("Średni wiek kobiet: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+    def wiek_sredni_mezczyzni_d(self):
+
+        _SQL = "SELECT ROUND(AVG(DATEDIFF(NOW(), data_ur))) AS sredni_wiek_w_dniach_dz FROM dorosli WHERE plec = 'M'"
+
+        self.cursor.execute(_SQL)
+        avg = self.cursor.fetchone()
+        lata = math.floor(avg[0] / 365)
+        mies = math.floor((avg[0] % 365) / 30)
+        dni = (avg[0] % 365) % 30
+        print("Średni wiek mężczyzn: " + str(avg[0]) + " dni, czyli " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+    def wiek_mediana_d(self):
+
+        _SQL = "SELECT *, (DATEDIFF(NOW(), data_ur)) AS wiek_w_dniach FROM dorosli"
+
+        self.cursor.execute(_SQL)
+        allResults = self.cursor.fetchall()
+
+        max = 0
+        i = 1
+        for row in allResults:
+            if row[6] > max:
+                max = row[6]
+            else:
+                continue
+            i += 1
+        lata = math.floor(max / 365)
+        mies = math.floor((max % 365) / 30)
+        dni = (max % 365) % 30
+
+        print("Najstarszy dorosły ma: " + str(max) + " dni, czyli około " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+        min = 100000
+        i = 1
+        for row in allResults:
+            if row[6] < min:
+                min = row[6]
+            else:
+                continue
+            i += 1
+        lata = math.floor(min / 365)
+        mies = math.floor((min % 365) / 30)
+        dni = (min % 365) % 30
+
+        print("Najmłodszy dorosły ma: " + str(min) + " dni, czyli około " + str(lata) + " lat, " + str(
+            mies) + " miesięcy i " + str(dni) + " dni.")
+        print(x)
+
+        self.cursor.execute("SELECT count(*) FROM dorosli")
+        liczba_d = self.cursor.fetchone()
+
+        id_mediany = (liczba_d[0] + 1)/2
+
+        if math.floor(id_mediany) == id_mediany:
+            _SQL = """SELECT imie, nazwisko, data_ur, 
+                                TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) AS lata,
+                                TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 AS miesiace,
+                                TIMESTAMPDIFF(DAY, (data_ur + INTERVAL TIMESTAMPDIFF(YEAR, data_ur, CURDATE()) YEAR + INTERVAL TIMESTAMPDIFF(MONTH, data_ur, CURDATE())%12 MONTH), CURDATE()) AS dni
+                                FROM dorosli
+                                ORDER BY lata DESC, miesiace DESC, dni DESC;"""
+
+            self.cursor.execute(_SQL)
+            allResults = self.cursor.fetchall()
+            i = 1
+            for row in allResults:
+                if i == id_mediany:
+                    print("Mediana wieku dorosłych to: " + str(row[3]) + " lat, " + str(row[4]) + " miesięcy i " + str(
+                        row[5]) + " dni.")
+                    print(x)
+                i += 1
+        else:
+            print("Mediana wieku dorosłych to ułamek.")
+
+        print("Liczba dorosłych: " + str(liczba_d[0]))
+        print("ID mediany wieku: " + str(id_mediany))
 
     # WSZYSCY
 
