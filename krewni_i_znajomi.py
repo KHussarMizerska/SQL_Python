@@ -1058,7 +1058,7 @@ class DBConnect:
 
     def wszyscy(self):
 
-        self.cursor.execute("SELECT * FROM wszyscy ORDER BY nazwisko, imie COLLATE utf8_polish_ci ASC")
+        self.cursor.execute("SELECT * FROM wszyscy ORDER BY nazwisko COLLATE utf8_polish_ci ASC, imie COLLATE utf8_polish_ci ASC")
         allResults = self.cursor.fetchall()
         print(x)
         print("Wszyscy krewni i znajomi Kasi wraz z ich datami urodzenia:")
