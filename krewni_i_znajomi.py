@@ -283,6 +283,7 @@ class DBConnect:
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
+                # ex = False
                 print("Koniec programu, podobało się?")
                 break
             else:
@@ -659,7 +660,7 @@ class DBConnect:
         allKids = self.cursor.fetchall()
 
         if len(allKids) == 0:
-            print("W bazie danych Kasi nie masz dzieci.")
+            print("\nW bazie danych Kasi nie masz dzieci.")
         else:
             print("\nTwoje dzieci:")
             i = 1
@@ -675,9 +676,9 @@ class DBConnect:
 
             result = self.cursor.fetchone()
             if result == None:
-                print("W bazie danych Kasi nie masz partnera.")
+                print("\nW bazie danych Kasi nie masz męża.")
             else:
-                print("\nTwoja Druga Połowa: ")
+                print("\nTwój mąż: ")
                 print(result[0], result[1])
 
         else:
@@ -686,9 +687,9 @@ class DBConnect:
 
             result = self.cursor.fetchone()
             if result == None:
-                print("W bazie danych Kasi nie masz partnera.")
+                print("W bazie danych Kasi nie masz żony.")
             else:
-                print("\nTwoja Druga Połowa: ")
+                print("\nTwoja żona: ")
                 print(result[0], result[1])
 
         # Wiek w dniach
