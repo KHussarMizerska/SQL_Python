@@ -13,6 +13,7 @@ class DBConnect:
     log_imie = ""
     log_nazwisko = ""
     log_ur = ""
+    ex = True
 
     def __init__(self):
         try:
@@ -65,7 +66,8 @@ class DBConnect:
             z - Zarządzanie bazą
             w - Wyjście z programu"""
 
-        while (True):
+        while (True and self.ex):
+
             dec = input(menu)
             if (dec == "1"):
                 self.urodziny_dzis()
@@ -283,7 +285,7 @@ class DBConnect:
             elif (dec == "p"):
                 self.menu_admin()
             elif (dec == "w"):
-                # ex = False
+                self.ex = False
                 print("Koniec programu, podobało się?")
                 break
             else:
